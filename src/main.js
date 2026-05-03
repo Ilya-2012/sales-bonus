@@ -7,11 +7,7 @@
 function calculateSimpleRevenue(purchase) {
   // @TODO: Расчет выручки от операции
   const discountFactor = 1 - purchase.discount / 100;
-        return (
-          purchase.sale_price *
-          purchase.quantity *
-          discountFactor
-        )
+  return purchase.sale_price * purchase.quantity * discountFactor;
 }
 
 /**
@@ -57,7 +53,7 @@ function analyzeSalesData(data, options) {
       throw new Error("Переменные не фуннкции!");
     }
     if (!data.purchase_records || data.purchase_records.length === 0) {
-        throw new Error("Массив записей о покупках пуст");
+      throw new Error("Массив записей о покупках пуст");
     }
   }
   const sellerStats = data.sellers.map((seller) => ({
@@ -87,7 +83,7 @@ function analyzeSalesData(data, options) {
     // Расчёт прибыли для каждого товара
     record.items.forEach((item) => {
       const product = productIndex[item.sku];
-      
+
       // Товар
       // Посчитать себестоимость (cost) товара как product.purchase_price, умноженную на количество товаров из чека
       // Посчитать выручку (revenue) с учётом скидки через функцию calculateRevenue
@@ -95,10 +91,11 @@ function analyzeSalesData(data, options) {
       // Увеличить общую накопленную прибыль (profit) у продавца
 
       // 3. Теперь считаем прибыль (выручка минус себестоимость)
-        seller.revenue += +calculateSimpleRevenue(item).toFixed(2);
+      seller.revenue += +calculateSimpleRevenue(item).toFixed(2);
       // Округляем ВСЁ выражение целиком на каждом шаге прибавления
-        seller.profit += calculateSimpleRevenue(item) - product.purchase_price * item.quantity;
-      
+      seller.profit +=
+        calculateSimpleRevenue(item) - product.purchase_price * item.quantity;
+
       // Учёт количества проданных товаров
       if (!seller.products_sold[item.sku]) {
         seller.products_sold[item.sku] = 0;
@@ -149,6 +146,6 @@ function analyzeSalesData(data, options) {
     profit: +seller.profit.toFixed(2),
     sales_count: seller.sales_count,
     top_products: seller.top_products,
-    bonus: +seller.bonus.toFixed(2),
+    bonus: Math.round(seller.bonus * 100) / 100
   }));
 }
