@@ -124,9 +124,9 @@ function analyzeSalesData(data, options) {
 
   sellerStats.forEach((seller, index) => {
     seller.bonus =
-      (seller.profit *
+      +((seller.profit *
         calculateBonusByProfit(index, sellerStats.length, seller)) /
-      100;
+      100).toFixed(2)
     seller.top_products = seller.products_sold;
   });
 
@@ -146,6 +146,6 @@ function analyzeSalesData(data, options) {
     profit: +seller.profit.toFixed(2),
     sales_count: seller.sales_count,
     top_products: seller.top_products,
-    bonus: Math.round(seller.bonus * 100) / 100
+    bonus: +seller.bonus.toFixed(2)
   }));
 }
